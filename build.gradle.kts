@@ -33,6 +33,9 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 
+    // Testes de UI dependem do estado do emulador: nunca reaproveitar resultado anterior
+    outputs.upToDateWhen { false }
+
     // Parallelization config
     systemProperties["junit.jupiter.execution.parallel.enabled"] = "false" // set to true for parallel runs
     systemProperties["junit.jupiter.execution.parallel.mode.default"] = "concurrent"
