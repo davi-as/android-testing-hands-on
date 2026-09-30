@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+*.gradle.backup
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Test results
+test-results/
+reports/
+
+# APK
+*.apk
+
+# Env
+.env
+.env.local
+
+# Logs
+*.log
