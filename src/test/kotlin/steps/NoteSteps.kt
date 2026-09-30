@@ -42,12 +42,14 @@ class NoteSteps {
         deckPicker.selectDeck(deck)
     }
 
-    // TODO: o step que falta ligar.
     // "carta" chega no formato "frente / verso" (ex.: "casa / house").
-    // 1. Separe pelo " / "
-    // 2. Faça o mesmo que o addCardToDeckTest: abrir o editor, preencher, salvar e voltar
     @Quando("eu adiciono uma carta {string}")
     fun euAdicionoUmaCarta(carta: String) {
+        val (frente, verso) = carta.split(" / ")
+        deckPicker.openNoteEditor()
+        noteEditor.fillCard(frente, verso)
+        noteEditor.save()
+        noteEditor.backToDeckList()
     }
 
     @Entao("o baralho {string} tem {int} carta")
