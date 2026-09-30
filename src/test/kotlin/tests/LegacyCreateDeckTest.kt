@@ -30,7 +30,7 @@ class LegacyCreateDeckTest {
         val deck = TestData.uniqueName("Italiano")
 
         driver.findElement(By.id("com.ichi2.anki:id/fab_main")).click()
-        driver.findElement(By.id("com.ichi2.anki:id/add_deck_action")).click()
+        driver.findElement(By.id("com.ichi2.anki:id/add_deck_button")).click()
         driver.findElement(By.id("com.ichi2.anki:id/dialog_text_input")).sendKeys(deck)
         driver.findElement(By.id("android:id/button1")).click()
 
