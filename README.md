@@ -91,7 +91,7 @@ Deve listar `uiautomator2` com status "installed".
 
 ### 6. AnkiDroid APK
 
-Baixe a última release: https://github.com/ankidroid/Anki-Android/releases
+Baixe a última release: [https://github.com/ankidroid/Anki-Android/releases](https://github.com/ankidroid/Anki-Android/releases/download/v2.25.0/AnkiDroid-2.25.0-full-universal.apk)
 
 Procure por `AnkiDroid-X.XX.apk` (não a versão de debug).
 
