@@ -3,6 +3,7 @@ package tests
 import AppiumConfig
 import TestData
 import io.appium.java_client.android.AndroidDriver
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,6 +39,6 @@ class NoteEditorTest {
         noteEditor.save()
         noteEditor.backToDeckList()
 
-        // TODO bônus: conferir que o baralho ficou com 1 carta nova (deckPicker.newCardCount)
+        assertThat(deckPicker.newCardCount(deck)).isEqualTo(1)
     }
 }

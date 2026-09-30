@@ -7,21 +7,19 @@ import org.openqa.selenium.WebElement
 // Tela de adicionar carta.
 class NoteEditorPage(driver: AndroidDriver) : BasePage(driver) {
 
-    // TODO 1: locator do campo Frente.
-    // O editor cria um campo por item do tipo de nota, todos com o MESMO resource-id
-    // (veja LOCATORS_CHEATSHEET.md). Use UiSelector com .instance(0).
-    @AndroidFindBy(uiAutomator = "")
+    // O editor cria um campo por item do tipo de nota, todos com o MESMO resource-id.
+    @AndroidFindBy(uiAutomator = "new UiSelector().resourceId(\"com.ichi2.anki:id/edit_text\").instance(0)")
     private lateinit var frontField: WebElement
 
-    // TODO 2: locator do campo Verso (mesmo resource-id, .instance(1)).
-    @AndroidFindBy(uiAutomator = "")
+    @AndroidFindBy(uiAutomator = "new UiSelector().resourceId(\"com.ichi2.anki:id/edit_text\").instance(1)")
     private lateinit var backField: WebElement
 
     @AndroidFindBy(id = "com.ichi2.anki:id/action_save")
     private lateinit var saveButton: WebElement
 
-    // TODO 3: preencher a frente e o verso da carta.
     fun fillCard(front: String, back: String) {
+        frontField.sendKeys(front)
+        backField.sendKeys(back)
     }
 
     fun save() {
