@@ -49,12 +49,12 @@ else
     echo "  ⚠ Gradle cache not warmed. First build will be slow."
 fi
 
-# 6. AnkiDroid APK
-echo "✓ Checking AnkiDroid APK..."
-if [ -f "AnkiDroid.apk" ] || [ -n "$ANKIDROID_APK" ]; then
-    echo "  ✓ AnkiDroid APK found"
+# 6. AnkiDroid instalado no emulador
+echo "✓ Checking AnkiDroid installed on emulator..."
+if adb shell pm path com.ichi2.anki >/dev/null 2>&1; then
+    echo "  ✓ AnkiDroid installed"
 else
-    echo "  ✘ AnkiDroid APK not found. Download from: https://github.com/ankidroid/Anki-Android/releases"
+    echo "  ✘ AnkiDroid not installed. Drag the APK onto the emulator screen (see README step 6)"
     ERRORS=$((ERRORS + 1))
 fi
 

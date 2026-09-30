@@ -55,12 +55,13 @@ if exist "%USERPROFILE%\.gradle\caches" (
     echo   - Gradle cache not warmed. First build will be slow.
 )
 
-REM 6. AnkiDroid APK
-echo Checking AnkiDroid APK...
-if exist "AnkiDroid.apk" (
-    echo   - AnkiDroid APK found
+REM 6. AnkiDroid instalado no emulador
+echo Checking AnkiDroid installed on emulator...
+adb shell pm path com.ichi2.anki >nul 2>&1
+if %errorlevel% equ 0 (
+    echo   - AnkiDroid installed
 ) else (
-    echo   - AnkiDroid APK not found. Download from: https://github.com/ankidroid/Anki-Android/releases
+    echo   - AnkiDroid not installed. Drag the APK onto the emulator screen (see README step 6^)
     set /a ERRORS=!ERRORS! + 1
 )
 
@@ -70,6 +71,6 @@ if %ERRORS% equ 0 (
     echo - All checks passed! Ready to go.
     exit /b 0
 ) else (
-    echo - %ERRORS% check(s) failed. Fix above and retry.
+    echo - %ERRORS% check(s^) failed. Fix above and retry.
     exit /b 1
 )

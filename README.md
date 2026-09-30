@@ -89,19 +89,41 @@ appium driver list
 
 Deve listar `uiautomator2` com status "installed".
 
-### 6. AnkiDroid APK
+### 6. Instalar o AnkiDroid no emulador
 
-Baixe a última release: [https://github.com/ankidroid/Anki-Android/releases](https://github.com/ankidroid/Anki-Android/releases/download/v2.25.0/AnkiDroid-2.25.0-full-universal.apk)
+1. Baixe o APK: [AnkiDroid-2.25.0-full-universal.apk](https://github.com/ankidroid/Anki-Android/releases/download/v2.25.0/AnkiDroid-2.25.0-full-universal.apk)
+   (use a versão **universal** — a `arm64-v8a` não instala no emulador)
+2. Com o emulador ligado, **arraste o arquivo `.apk` para cima da tela do emulador**. Ele instala sozinho.
+3. Abra o AnkiDroid uma vez no emulador e aceite as telas iniciais.
 
-Procure por `AnkiDroid-X.XX.apk` (não a versão de debug).
+Os testes não instalam o app: eles só abrem o AnkiDroid que já está no emulador.
 
-Coloque na raiz do repo:
+### 7. Variável ANDROID_HOME
 
-```bash
-C:\Projects\android-testing-hands-on\AnkiDroid.apk
+O Appium precisa saber onde está o Android SDK (que veio com o Android Studio).
+
+**Windows** (PowerShell):
+```powershell
+[Environment]::SetEnvironmentVariable("ANDROID_HOME", "$env:LOCALAPPDATA\Android\Sdk", "User")
+$p = [Environment]::GetEnvironmentVariable("Path", "User")
+[Environment]::SetEnvironmentVariable("Path", "$p;$env:LOCALAPPDATA\Android\Sdk\platform-tools", "User")
 ```
 
-### 7. Warm-up Gradle
+**Mac** (`~/.zshrc`):
+```bash
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+**Linux** (`~/.bashrc`):
+```bash
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+Depois **feche e abra o terminal** e confira com `adb devices`.
+
+### 8. Warm-up Gradle
 
 ```bash
 cd C:\Projects\android-testing-hands-on
@@ -110,7 +132,7 @@ cd C:\Projects\android-testing-hands-on
 
 Primeira execução baixa dependências (~300 MB). Tem que ser em casa.
 
-### 8. OpenCode (opcional para o dia)
+### 9. OpenCode (opcional para o dia)
 
 Instale: https://opencode.ai/docs
 
@@ -118,7 +140,7 @@ Instale: https://opencode.ai/docs
 npm install -g opencode
 ```
 
-### 9. Validação final
+### 10. Validação final
 
 ```bash
 cd C:\Projects\android-testing-hands-on
@@ -148,7 +170,6 @@ Todos os itens devem estar ✓. Se algum estiver ✘, conserte **antes do evento
 android-testing-hands-on/
 ├── build.gradle.kts          # Configuração Gradle + dependências
 ├── settings.gradle.kts
-├── AnkiDroid.apk             # Aplicação alvo
 ├── src/
 │   └── test/
 │       └── kotlin/
@@ -179,6 +200,10 @@ Emulador não tá respondendo.
 2. Aguarde 10s
 3. Reinicie (▶️)
 4. Aguarde boot completo (2–3 min)
+
+### "Neither ANDROID_HOME nor ANDROID_SDK_ROOT environment variable was exported"
+
+O Appium não sabe onde está o Android SDK. Faça o passo **7. Variável ANDROID_HOME**, abra um terminal novo e reinicie o `appium`.
 
 ### "JDK 17 not found"
 

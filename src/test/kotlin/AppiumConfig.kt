@@ -7,16 +7,16 @@ object AppiumConfig {
 
     fun createDriver(udid: String? = null, appiumPort: Int = 4723): AndroidDriver {
         val options = UiAutomator2Options().apply {
-            platformName = "Android"
-            automationName = "UiAutomator2"
+            setPlatformName("Android")
+            setAutomationName("UiAutomator2")
 
-            // APK da aplicação
-            app = System.getenv("ANKIDROID_APK")
-                ?: "/path/to/AnkiDroid.apk"
+            // AnkiDroid já instalado no emulador: só abrimos o app
+            setAppPackage("com.ichi2.anki")
+            setAppActivity("com.ichi2.anki.IntentHandler")
 
             // Emulador
             if (udid != null) {
-                udid(udid)
+                setUdid(udid)
             }
 
             // Outras capabilities
