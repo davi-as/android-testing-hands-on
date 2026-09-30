@@ -63,7 +63,7 @@ Se não aparecer, o emulador não tá online — aguarde ou reinicie.
 
 ```bash
 cd C:\Projects
-git clone https://github.com/seu-usuario/android-testing-hands-on.git
+git clone https://github.com/davi-as/android-testing-hands-on.git
 cd android-testing-hands-on
 ```
 
