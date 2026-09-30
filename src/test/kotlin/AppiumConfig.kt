@@ -21,6 +21,9 @@ object AppiumConfig {
 
             // Outras capabilities
             noReset()
+            // Mantém os dados, mas reinicia o app: todo teste começa na lista de baralhos
+            setCapability("forceAppLaunch", true)
+            setCapability("shouldTerminateApp", true)
             autoGrantPermissions()
             setCapability("disableWindowAnimation", true)
             setCapability("disableSystemAnimations", true)

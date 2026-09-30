@@ -43,6 +43,60 @@ new UiSelector().resourceId("com.ichi2.anki:id/edit_text").instance(0)   // Fren
 new UiSelector().resourceId("com.ichi2.anki:id/edit_text").instance(1)   // Verso
 ```
 
+### Pronto pra colar: solução dos TODOs do `NoteEditorPage.kt`
+
+**TODO 1 — campo Frente:**
+
+```kotlin
+@AndroidFindBy(uiAutomator = "new UiSelector().resourceId(\"com.ichi2.anki:id/edit_text\").instance(0)")
+private lateinit var frontField: WebElement
+```
+
+**TODO 2 — campo Verso:**
+
+```kotlin
+@AndroidFindBy(uiAutomator = "new UiSelector().resourceId(\"com.ichi2.anki:id/edit_text\").instance(1)")
+private lateinit var backField: WebElement
+```
+
+**TODO 3 — preencher a carta:**
+
+```kotlin
+fun fillCard(front: String, back: String) {
+    frontField.sendKeys(front)
+    backField.sendKeys(back)
+}
+```
+
+> A barra antes das aspas internas (`\"`) é obrigatória: sem ela o Kotlin acha que o texto acabou.
+
+Rodar:
+
+```bash
+./gradlew test --tests NoteEditorTest
+```
+
+### Pronto pra colar: solução do TODO do Cucumber (`NoteSteps.kt`)
+
+Depende dos TODOs do `NoteEditorPage.kt` acima: faça aqueles primeiro.
+
+```kotlin
+@Quando("eu adiciono uma carta {string}")
+fun euAdicionoUmaCarta(carta: String) {
+    val (frente, verso) = carta.split(" / ")
+    deckPicker.openNoteEditor()
+    noteEditor.fillCard(frente, verso)
+    noteEditor.save()
+    noteEditor.backToDeckList()
+}
+```
+
+Rodar:
+
+```bash
+./gradlew test --tests RunCucumberTest
+```
+
 ## Reviewer (revisão)
 
 | Elemento | resource-id |

@@ -36,7 +36,7 @@ class DeckPickerTest {
 
     @Test
     fun newDeckStartsEmptyTest() {
-        val deck = TestData.uniqueName("Alemao")
+        val deck = TestData.uniqueName("Inglês")
 
         deckPicker.createDeck(deck)
 

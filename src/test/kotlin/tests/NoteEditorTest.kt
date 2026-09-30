@@ -29,7 +29,7 @@ class NoteEditorTest {
 
     @Test
     fun addCardToDeckTest() {
-        val deck = TestData.uniqueName("Espanhol")
+        val deck = TestData.uniqueName("Inglês")
         deckPicker.createDeck(deck)
         deckPicker.selectDeck(deck)
 

@@ -3,6 +3,8 @@ package pages
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.pagefactory.AndroidFindBy
 import org.openqa.selenium.WebElement
+import org.openqa.selenium.support.ui.WebDriverWait
+import java.time.Duration
 
 // Tela de adicionar carta.
 class NoteEditorPage(driver: AndroidDriver) : BasePage(driver) {
@@ -29,10 +31,16 @@ class NoteEditorPage(driver: AndroidDriver) : BasePage(driver) {
     }
 
     // Depois de salvar, o editor continua aberto (pronto para a próxima carta).
+    // Depois de salvar, o editor reabre o teclado: às vezes o "voltar" só fecha o teclado.
+    // Repete o "voltar" até sair do editor.
     fun backToDeckList() {
-        if (driver.isKeyboardShown) {
-            driver.hideKeyboard()
-        }
-        driver.navigate().back()
+        WebDriverWait(driver, Duration.ofSeconds(10))
+            .pollingEvery(Duration.ofSeconds(1))
+            .until {
+                if (isOpen()) driver.navigate().back()
+                !isOpen()
+            }
     }
+
+    private fun isOpen() = driver.currentActivity()?.endsWith("NoteEditorActivity") == true
 }

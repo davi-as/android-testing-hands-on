@@ -4,7 +4,7 @@ Use esses exemplos durante o hands-on (bloco de conserto com IA, 14h45–14h55).
 
 ---
 
-## Exemplo 1: Prompt BOM (colável de primeira)
+## Exemplo 1: Prompt BOM
 
 ```
 Siga exatamente o padrão de `DeckPickerPage.kt`. 
