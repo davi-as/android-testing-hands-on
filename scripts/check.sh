@@ -58,6 +58,14 @@ else
     ERRORS=$((ERRORS + 1))
 fi
 
+# 7. OpenCode (opcional)
+echo "✓ Checking OpenCode..."
+if command -v opencode &> /dev/null; then
+    echo "  ✓ OpenCode installed"
+else
+    echo "  ⚠ OpenCode not found (optional). Run: npm install -g opencode"
+fi
+
 echo ""
 echo "=== Summary ==="
 if [ $ERRORS -eq 0 ]; then

@@ -1,6 +1,7 @@
 package steps
 
 import AppiumConfig
+import TestData
 import io.appium.java_client.android.AndroidDriver
 import io.cucumber.java.After
 import io.cucumber.java.Before
@@ -11,17 +12,21 @@ import org.assertj.core.api.Assertions.assertThat
 import pages.DeckPickerPage
 import pages.NoteEditorPage
 
+// O Cucumber cria uma instância desta classe por cenário: o estado abaixo não vaza entre cenários.
 class NoteSteps {
 
     private lateinit var driver: AndroidDriver
-    private lateinit var deckPickerPage: DeckPickerPage
-    private lateinit var noteEditorPage: NoteEditorPage
+    private lateinit var deckPicker: DeckPickerPage
+    private lateinit var noteEditor: NoteEditorPage
+
+    // Nome do cenário ("Espanhol") -> nome real no app ("Espanhol 48213")
+    private val decks = mutableMapOf<String, String>()
 
     @Before
     fun setup() {
         driver = AppiumConfig.createDriver()
-        deckPickerPage = DeckPickerPage(driver)
-        noteEditorPage = NoteEditorPage(driver)
+        deckPicker = DeckPickerPage(driver)
+        noteEditor = NoteEditorPage(driver)
     }
 
     @After
@@ -30,24 +35,23 @@ class NoteSteps {
     }
 
     @Dado("que existe um baralho {string}")
-    fun queExisteUmBaralho(nomeBaralho: String) {
-        if (!deckPickerPage.deckExists(nomeBaralho)) {
-            deckPickerPage.createDeck(nomeBaralho)
-        }
-        deckPickerPage.tapDeckByName(nomeBaralho)
+    fun queExisteUmBaralho(nome: String) {
+        val deck = TestData.uniqueName(nome)
+        decks[nome] = deck
+        deckPicker.createDeck(deck)
+        deckPicker.selectDeck(deck)
     }
 
-    // TODO (hands-on de BDD, o step que falta ligar):
+    // TODO: o step que falta ligar.
     // "carta" chega no formato "frente / verso" (ex.: "casa / house").
     // 1. Separe pelo " / "
-    // 2. Chame noteEditorPage.fillQuestion(frente), fillAnswer(verso) e save()
-    //    — os mesmos métodos que você implementou no bloco de POM
+    // 2. Faça o mesmo que o addCardToDeckTest: abrir o editor, preencher, salvar e voltar
     @Quando("eu adiciono uma carta {string}")
     fun euAdicionoUmaCarta(carta: String) {
     }
 
-    @Entao("o baralho tem {int} carta")
-    fun oBaralhoTemCarta(quantidade: Int) {
-        assertThat(noteEditorPage.getCardCount()).isEqualTo(quantidade)
+    @Entao("o baralho {string} tem {int} carta")
+    fun oBaralhoTemCarta(nome: String, quantidade: Int) {
+        assertThat(deckPicker.newCardCount(decks.getValue(nome))).isEqualTo(quantidade)
     }
 }

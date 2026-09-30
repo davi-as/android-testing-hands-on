@@ -3,7 +3,7 @@
 Repositório do hands-on de automação de testes Android com Appium, Cucumber e Kotlin.
 
 **Evento**: Jornada Android – 21 de setembro de 2026 (Samsung Ocean)  
-**Duração**: 90 min  
+**Horário**: 13h50–15h05 (75 min)  
 **Apresentador**: Davi Alves de Sousa
 
 ---
@@ -127,10 +127,12 @@ Depois **feche e abra o terminal** e confira com `adb devices`.
 
 ```bash
 cd C:\Projects\android-testing-hands-on
-./gradlew build
+./gradlew compileTestKotlin
 ```
 
 Primeira execução baixa dependências (~300 MB). Tem que ser em casa.
+
+Use `compileTestKotlin`, não `build`: o `build` também roda os testes, e alguns deles falham de propósito até o hands-on.
 
 ### 9. OpenCode (opcional para o dia)
 
@@ -156,7 +158,7 @@ Todos os itens devem estar ✓. Se algum estiver ✘, conserte **antes do evento
 
 ---
 
-## Setup no dia (14h00)
+## Setup no dia (13h50)
 
 1. Emulador já deve estar ligado
 2. Rode `check.bat` (ou `check.sh`)
@@ -172,15 +174,22 @@ android-testing-hands-on/
 ├── settings.gradle.kts
 ├── src/
 │   └── test/
-│       └── kotlin/
-│           ├── AppiumConfig.kt         # Driver factory
-│           ├── pages/
-│           │   ├── BasePage.kt         # Classe base
-│           │   ├── DeckPickerPage.kt   # Exemplo pronto
-│           │   └── NoteEditorPage.kt   # Exemplo vazio (hands-on)
-│           └── tests/
-│               ├── DeckPickerTest.kt   # Teste que passa
-│               └── NoteEditorTest.kt   # Teste que falha (hands-on)
+│       ├── kotlin/
+│       │   ├── AppiumConfig.kt              # Cria o driver (abre o AnkiDroid do emulador)
+│       │   ├── TestData.kt                  # Nomes únicos de baralho por execução
+│       │   ├── RunCucumberTest.kt           # Roda os cenários .feature
+│       │   ├── pages/
+│       │   │   ├── BasePage.kt              # Classe base
+│       │   │   ├── DeckPickerPage.kt        # Lista de baralhos (pronto)
+│       │   │   └── NoteEditorPage.kt        # Editor de carta (hands-on)
+│       │   ├── steps/
+│       │   │   └── NoteSteps.kt             # Step definitions do BDD
+│       │   └── tests/
+│       │       ├── DeckPickerTest.kt        # Testes prontos (passam)
+│       │       ├── NoteEditorTest.kt        # Teste novo (hands-on)
+│       │       └── LegacyCreateDeckTest.kt  # Teste antigo (vamos consertar com IA)
+│       └── resources/features/
+│           └── note.feature                 # Cenário em português
 ├── scripts/
 │   ├── check.sh              # Validador (Unix)
 │   └── check.bat             # Validador (Windows)
@@ -272,18 +281,18 @@ Se não souber fazer, peça ajuda de suporte técnico.
 
 ### "Gradle build fails"
 
-Erro ao rodar `./gradlew build`.
+Erro ao rodar `./gradlew compileTestKotlin`.
 
 **Solução**:
 ```bash
 ./gradlew clean
-./gradlew build
+./gradlew compileTestKotlin
 ```
 
 Se persistir, delete cache:
 ```bash
 rm -rf ~/.gradle/caches
-./gradlew build
+./gradlew compileTestKotlin
 ```
 
 ### "Não consigo rodar os testes"
@@ -308,13 +317,25 @@ Se falhar, copie a **mensagem de erro completa** e mande pra Davi **com anteced�
 
 ## Cheat-sheet de locators (AnkiDroid)
 
-Será fornecido no evento como PNG com resource-ids anotados.
+Veja [`LOCATORS_CHEATSHEET.md`](LOCATORS_CHEATSHEET.md).
 
 ---
 
-## Respostas dos hands-on
+## Checkpoints (respostas dos hands-on)
 
-Pasta `outputs/` contém as soluções esperadas. **Não consulte durante o evento**, só depois.
+Cada etapa do hands-on tem uma branch com o código pronto até ali. Se algo travar, guarde o que você fez e pule para o checkpoint:
+
+```bash
+git stash
+git checkout 01-teste-novo
+```
+
+| Branch | O que tem pronto |
+|---|---|
+| `00-inicio` | Ponto de partida (igual à `master`) |
+| `01-teste-novo` | `NoteEditorPage` completo e `addCardToDeckTest` passando |
+| `02-bdd` | + o step de BDD ligado; cenário passando |
+| `03-fix-ia` | + teste antigo consertado: a suíte inteira passa |
 
 ---
 

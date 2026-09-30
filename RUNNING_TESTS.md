@@ -4,7 +4,7 @@
 
 - Emulador Pixel 6 API 33 rodando (`adb devices` mostra "device")
 - Appium rodando em outro terminal: `appium`
-- Gradle build completo: `./gradlew build`
+- Dependências baixadas e código compilando: `./gradlew compileTestKotlin`
 
 ## Rodar todos os testes
 
@@ -20,9 +20,13 @@
 
 ```bash
 ./gradlew test --tests NoteEditorTest
+./gradlew test --tests LegacyCreateDeckTest
+./gradlew test --tests RunCucumberTest     # cenários BDD (.feature)
 ```
 
-## Rodar com paralelização (2 emuladores)
+## Paralelização (2 emuladores): fora do hands-on
+
+No evento isso só é mencionado: dois emuladores no mesmo notebook travam a máquina. Fica como próximo passo.
 
 Edite `build.gradle.kts`, altere:
 

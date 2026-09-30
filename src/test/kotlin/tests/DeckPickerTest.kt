@@ -1,7 +1,9 @@
 package tests
 
 import AppiumConfig
+import TestData
 import io.appium.java_client.android.AndroidDriver
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -10,12 +12,12 @@ import pages.DeckPickerPage
 class DeckPickerTest {
 
     private lateinit var driver: AndroidDriver
-    private lateinit var deckPickerPage: DeckPickerPage
+    private lateinit var deckPicker: DeckPickerPage
 
     @BeforeEach
     fun setup() {
         driver = AppiumConfig.createDriver()
-        deckPickerPage = DeckPickerPage(driver)
+        deckPicker = DeckPickerPage(driver)
     }
 
     @AfterEach
@@ -24,8 +26,20 @@ class DeckPickerTest {
     }
 
     @Test
-    fun `should navigate to deck picker`() {
-        // Este teste passa porque apenas navega pela tela aberta
-        assert(true) // Placeholder — verificar que driver está conectado
+    fun createDeckTest() {
+        val deck = TestData.uniqueName("Espanhol")
+
+        deckPicker.createDeck(deck)
+
+        assertThat(deckPicker.deckExists(deck)).isTrue()
+    }
+
+    @Test
+    fun newDeckStartsEmptyTest() {
+        val deck = TestData.uniqueName("Alemao")
+
+        deckPicker.createDeck(deck)
+
+        assertThat(deckPicker.newCardCount(deck)).isEqualTo(0)
     }
 }

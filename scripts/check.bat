@@ -65,6 +65,15 @@ if %errorlevel% equ 0 (
     set /a ERRORS=!ERRORS! + 1
 )
 
+REM 7. OpenCode (opcional)
+echo Checking OpenCode...
+where opencode >nul 2>&1
+if %errorlevel% equ 0 (
+    echo   - OpenCode installed
+) else (
+    echo   - OpenCode not found ^(optional^). Run: npm install -g opencode
+)
+
 echo.
 echo === Summary ===
 if %ERRORS% equ 0 (

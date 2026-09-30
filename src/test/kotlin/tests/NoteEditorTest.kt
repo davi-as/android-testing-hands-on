@@ -1,21 +1,25 @@
 package tests
 
 import AppiumConfig
+import TestData
 import io.appium.java_client.android.AndroidDriver
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import pages.DeckPickerPage
 import pages.NoteEditorPage
 
 class NoteEditorTest {
 
     private lateinit var driver: AndroidDriver
-    private lateinit var noteEditorPage: NoteEditorPage
+    private lateinit var deckPicker: DeckPickerPage
+    private lateinit var noteEditor: NoteEditorPage
 
     @BeforeEach
     fun setup() {
         driver = AppiumConfig.createDriver()
-        noteEditorPage = NoteEditorPage(driver)
+        deckPicker = DeckPickerPage(driver)
+        noteEditor = NoteEditorPage(driver)
     }
 
     @AfterEach
@@ -24,13 +28,16 @@ class NoteEditorTest {
     }
 
     @Test
-    fun `addCardToDeckTest`() {
-        // Preenchimento de nota
-        noteEditorPage.fillQuestion("casa")
-        noteEditorPage.fillAnswer("house")
-        noteEditorPage.save()
+    fun addCardToDeckTest() {
+        val deck = TestData.uniqueName("Espanhol")
+        deckPicker.createDeck(deck)
+        deckPicker.selectDeck(deck)
 
-        // Verificação: nota foi salva
-        assert(true) // Placeholder até implementar
+        deckPicker.openNoteEditor()
+        noteEditor.fillCard("casa", "house")
+        noteEditor.save()
+        noteEditor.backToDeckList()
+
+        // TODO bônus: conferir que o baralho ficou com 1 carta nova (deckPicker.newCardCount)
     }
 }

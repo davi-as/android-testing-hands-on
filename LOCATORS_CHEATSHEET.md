@@ -1,81 +1,58 @@
 # AnkiDroid Locators Cheat-sheet
 
-Use `resource-id` quando possível (mais estável que XPath).
+Use `resource-id` sempre que der (mais estável que XPath).
 
-> **Status verificado em 2026-09-30** contra o `resources.arsc` do
-> `AnkiDroid-2.25.0beta1-arm64-v8a.apk` que está no repo (checagem estática de string —
-> confirma que o *nome* do id existe no app, não confirma em qual tela nem a hierarquia).
-> ✅ = nome existe no APK · ⚠️ = existe um candidato melhor, não confirmado ao vivo ·
-> ❌ = id usado no código não existe neste APK, **precisa trocar antes do evento**.
-> Todo ⚠️/❌ deve ser confirmado com o Appium Inspector rodando contra o emulador real
-> antes do dia do evento.
+> Ids conferidos no código-fonte do **AnkiDroid 2.25.0** (layouts em `AnkiDroid/src/main/res`
+> da tag `v2.25.0`). Isso garante que o id existe e em qual tela ele fica; a confirmação final
+> é rodar os testes no emulador.
 
-## DeckPickerActivity (Tela inicial — lista de baralhos)
+## DeckPicker (tela inicial: lista de baralhos)
 
-| Elemento | Tipo | Locator | resource-id | Status |
-|----------|------|---------|-------------|--------|
-| Botão flutuante "+" | FAB | id | `com.ichi2.anki:id/fab_main` | ⚠️ era `fab_expand_menu_button`, não existe mais; `fab_main` é o melhor candidato |
-| Menu "Adicionar Baralho" | MenuItem | id | `com.ichi2.anki:id/add_deck_button` | ✅ |
-| Menu "Adicionar Nota" | MenuItem | id | `com.ichi2.anki:id/menu_add_note` | ✅ |
-| Campo de nome do baralho (diálogo criar) | EditText | id | `com.ichi2.anki:id/deck_name_input` | ✅ |
-| Confirmar diálogo (OK) | Button | id | `android:id/button1` | ✅ (id padrão de AlertDialog) |
-| Baralho na lista | TextView | XPath | `//android.widget.TextView[@text='NOME_DO_BARALHO']` | — (XPath por texto, não por id) |
-| Contagem "novo" na linha do baralho | TextView | id | `com.ichi2.anki:id/deck_picker_new` | ⚠️ existe, mas não confirmamos que fica dentro de `deck_picker_group` |
-| Campo de busca | EditText | id | `com.ichi2.anki:id/search` | ✅ |
+| Elemento | resource-id | Observação |
+|----------|-------------|------------|
+| Botão flutuante "+" | `com.ichi2.anki:id/fab_main` | 1º toque abre o menu. Com o menu aberto, tocar de novo abre o editor de nota. |
+| Menu "Criar baralho" | `com.ichi2.anki:id/add_deck_button` | Só aparece com o menu do "+" aberto. Até a versão 2.17 se chamava `add_deck_action`. |
+| Campo do nome (diálogo "Criar baralho") | `com.ichi2.anki:id/dialog_text_input` | |
+| Botão OK de diálogo | `android:id/button1` | Id padrão do Android |
+| Lista de baralhos | `com.ichi2.anki:id/decks` | RecyclerView, rola |
+| Linha de um baralho | `com.ichi2.anki:id/deck_layout` | |
+| Nome do baralho na linha | `com.ichi2.anki:id/deck_name` | Filtre pelo texto |
+| Cartas novas na linha | `com.ichi2.anki:id/deck_new` | Dentro da mesma `deck_layout` do nome |
 
-## NoteEditorActivity (Tela de adicionar/editar nota)
+Achar um baralho, rolando a lista se precisar:
 
-| Elemento | Tipo | Locator | resource-id | Status |
-|----------|------|---------|-------------|--------|
-| Campo "Questão" (frente) | EditText | id genérico + instance | `com.ichi2.anki:id/edit_text`, `instance(0)` | ❌ `note_editor_front` não existe — editor é dinâmico, um `edit_text` por campo do note type |
-| Campo "Resposta" (verso) | EditText | id genérico + instance | `com.ichi2.anki:id/edit_text`, `instance(1)` | ❌ `note_editor_back` não existe — mesmo id, `instance(1)` |
-| Botão "Salvar" | Button | id | `com.ichi2.anki:id/save` | ✅ |
-| Spinner modelo (note type) | Spinner | id | `com.ichi2.anki:id/note_type_spinner` | ⚠️ era `model_spinner`, não existe; `note_type_spinner` é o candidato |
+```
+new UiScrollable(new UiSelector().resourceId("com.ichi2.anki:id/decks"))
+    .scrollIntoView(new UiSelector().resourceId("com.ichi2.anki:id/deck_name").text("Espanhol"))
+```
 
-Locator UiAutomator para os campos dinâmicos (usar com `@AndroidFindBy(uiAutomator = ...)`):
+## NoteEditor (adicionar carta)
+
+| Elemento | resource-id | Observação |
+|----------|-------------|------------|
+| Campos da nota (Frente, Verso...) | `com.ichi2.anki:id/edit_text` | Um por campo, **todos com o mesmo id**. Frente = `instance(0)`, Verso = `instance(1)` no tipo de nota "Básico". |
+| Nome do campo | `com.ichi2.anki:id/label` | |
+| Botão Salvar (✓ na barra) | `com.ichi2.anki:id/action_save` | Depois de salvar, o editor continua aberto. |
+| Baralho de destino | `com.ichi2.anki:id/note_deck_name` | |
+| Tipo de nota | `com.ichi2.anki:id/note_type_spinner` | |
+
+Locator UiAutomator para os campos (usar com `@AndroidFindBy(uiAutomator = ...)`):
 
 ```
 new UiSelector().resourceId("com.ichi2.anki:id/edit_text").instance(0)   // Frente
 new UiSelector().resourceId("com.ichi2.anki:id/edit_text").instance(1)   // Verso
 ```
 
-## ReviewActivity (Tela de revisão)
+## Reviewer (revisão)
 
-| Elemento | Tipo | Locator | resource-id | Status |
-|----------|------|---------|-------------|--------|
-| Botão "Mostrar Resposta" | Button | id | `com.ichi2.anki:id/show_answer_button` | ✅ |
-| Avaliação (fácil/difícil/etc) | Button | xpath | `//android.widget.Button[@text='Fácil']` | — (XPath por texto) |
-| Pergunta | TextView | id | `com.ichi2.anki:id/question` | ✅ |
-| Resposta | TextView | id | `com.ichi2.anki:id/answer` | ✅ |
+| Elemento | resource-id |
+|----------|-------------|
+| Botão "Mostrar resposta" | `com.ichi2.anki:id/show_answer_button` |
+| Área do cartão | `com.ichi2.anki:id/flashcard` |
+| Botões de avaliação (De novo, Difícil, Bom, Fácil) | `com.ichi2.anki:id/ease1` a `ease4` |
 
 ## Dicas
 
-- **Sempre use `resource-id` > XPath**: mais rápido, mais estável
-- **XPath com `@text`**: cuidado com idioma — app pode estar em PT ou EN
-- **Para elementos dinâmicos** (índice na lista): `UiSelector().text("nome")`
-- **Se XPath falhar**: abra Appium Inspector, inspecione o elemento, copie exatamente o resource-id
-
----
-
-## Appium Inspector (obrigatório ANTES do evento, não só demo)
-
-Todo item marcado ⚠️/❌ acima foi encontrado só por inspeção estática do APK (nome existe,
-tela e hierarquia não confirmadas). **Antes do evento**, alguém precisa confirmar cada um
-ao vivo:
-
-1. Appium rodando: `appium`
-2. No IDE, procure por "Appium Inspector" ou abra: http://inspector.appium.io
-3. Conecte ao emulador com o `AnkiDroid-2.25.0beta1-arm64-v8a.apk` deste repo instalado
-4. Clique no elemento na tela
-5. Copie o resource-id exato (não o XPath completo) e atualize esta tabela
-
-## Como eu confirmei os ⚠️/❌ acima (sem emulador)
-
-Sem emulador disponível, dá pra checar se um nome de id *existe em algum lugar do app*
-extraindo a tabela de strings do APK (não confirma tela nem hierarquia — só existência):
-
-```bash
-unzip -o AnkiDroid-2.25.0beta1-arm64-v8a.apk resources.arsc -d /tmp/apk_inspect
-strings -e s /tmp/apk_inspect/resources.arsc | grep -i "nome_do_id"
-```
-
+- **`resource-id` > XPath**: um é nome, o outro é endereço.
+- **XPath com `@text`**: cuidado com o idioma, o app pode estar em PT ou EN.
+- **Na dúvida**: abra o Appium Inspector (http://inspector.appium.io), clique no elemento e copie o resource-id.

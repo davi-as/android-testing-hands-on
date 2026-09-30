@@ -1,6 +1,6 @@
 # Exemplos de Prompts IA — As 6 Regras
 
-Use esses exemplos durante o hands-on (14h56–15h18).
+Use esses exemplos durante o hands-on (bloco de conserto com IA, 14h45–14h55).
 
 ---
 
@@ -10,13 +10,13 @@ Use esses exemplos durante o hands-on (14h56–15h18).
 Siga exatamente o padrão de `DeckPickerPage.kt`. 
 Crie `ReviewerPage.kt` com os locators desta tela: 
 - com.ichi2.anki:id/show_answer_button
-- com.ichi2.anki:id/question
-- com.ichi2.anki:id/answer
+- com.ichi2.anki:id/ease1
+- com.ichi2.anki:id/ease3
 
 Métodos:
-- showAnswer(): void
-- getQuestionText(): String
-- getAnswerText(): String
+- showAnswer()
+- answerAgain()
+- answerGood()
 
 Só o arquivo, sem explicação, sem imports extras.
 ```
@@ -86,27 +86,29 @@ do ankidroid com boas práticas
 
 **Limite**: 1 prompt (força economia de primeira)
 
-### Dupla 2+: Corrigir Page Object quebrado
+### Conserto ao vivo: teste antigo quebrado
 
-**Cenário real**: app mudou, locator morreu
+**Cenário real**: o app mudou e o locator morreu. `LegacyCreateDeckTest` foi escrito quando o botão de criar baralho se chamava `add_deck_action`; no AnkiDroid 2.25 ele é `add_deck_button`.
 
-**Erro**:
+**Erro** (rode `./gradlew test --tests LegacyCreateDeckTest` e copie do relatório):
 ```
-io.appium.java_client.remote.MobileCommand: org.openqa.selenium.NoSuchElementException:
-An element could not be located on the page using the given search parameters 
-("xpath", "//android.widget.Button[@resource-id='ANTIGO']").
+org.openqa.selenium.NoSuchElementException: An element could not be located on the page
+using the given search parameters.
+...
+at tests.LegacyCreateDeckTest.legacyCreateDeckTest(LegacyCreateDeckTest.kt:...)
 ```
 
-**Prompt BOM**:
+**Prompt BOM** (contexto seletivo: o erro, o teste e o cheat-sheet):
 ```
-Cole o stack trace acima. ReviewerPage.kt falha na linha X. 
-Veja LOCATORS_CHEATSHEET.md, o novo resource-id é Y.
-Corrija o locator.
+Este teste falha com o erro abaixo. Use os ids de LOCATORS_CHEATSHEET.md.
+Me devolva só o diff mínimo de LegacyCreateDeckTest.kt, sem explicação.
+
+<cole o stack trace cru>
 ```
 
 **Prompt RUIM**:
 ```
-O teste está falhando, conserta pra mim
+O teste está falhando, acho que é problema de timing, conserta pra mim
 ```
 
 ---
@@ -115,7 +117,7 @@ O teste está falhando, conserta pra mim
 
 - **Total**: X tokens
 - **Por dupla**: Y tokens
-- **Monitorar durante**: 14h56–15h18
+- **Monitorar durante**: 14h45–14h55
 
 Se chegar a 80%, avise a sala: "faltam 2 prompts, escolham com cuidado".
 
